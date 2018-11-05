@@ -8,11 +8,22 @@ minst = keras.datasets.mnist
 # print(len(x_train))
 # print(len(x_train[0]))
 # print(x_train[0])
-
+img_rows, img_cols = 28,28
 x_train = keras.utils.normalize(x_train,axis=1)
 x_test = keras.utils.normalize(x_test,axis=1)
+if keras.backend.image_data_format() == 'channels_first':
+    x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
+    x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_cols)
+    input_shape = (1, img_rows, img_cols)
+else:
+    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+    input_shape = (img_rows, img_cols, 1)
 # keras.utils.normalize()
 model = keras.models.Sequential()
+model.add(keras.layers.Conv2D(128,kernel_size=(3,3),activation='relu',input_shape=input_shape))
+model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=(2,2)))
 model.add(keras.layers.Flatten())
 model.add(keras.layers.Dense(128,activation='relu'))
 model.add(keras.layers.Dropout(0.25))
@@ -33,3 +44,4 @@ model.fit(x_train,y_train,epochs=4)
 #step 3 -  128 neurons -
 #step 4 -  128 neurons - dropauts 0.25: Elapsed time: 0:00:49.117571
 #step 4a PC -  128 neurons - dropauts 0.25: Elapsed time: 0:00:22.729088
+#step 5a - CONV lyer - 0:58:30.648199 :0 WOW time
