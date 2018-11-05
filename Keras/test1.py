@@ -44,4 +44,5 @@ model.fit(x_train,y_train,epochs=4)
 #step 3 -  128 neurons -
 #step 4 -  128 neurons - dropauts 0.25: Elapsed time: 0:00:49.117571
 #step 4a PC -  128 neurons - dropauts 0.25: Elapsed time: 0:00:22.729088
-#step 5a - CONV lyer - 0:58:30.648199 :0 WOW time -
+#step 5 - CONV lyer - 0:58:30.648199 :0 WOW time -
+#step 5a PC - 0:26:04.780303
