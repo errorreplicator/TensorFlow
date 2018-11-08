@@ -1,65 +1,84 @@
-from tensorflow.examples.tutorials import mnist
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+import cv2
+from tqdm import tqdm
+
+DATADIR = "./Data/"
+
+CATEGORIES = ["Dog", "Cat"]
+
+IMG_SIZE = 50
+input_size = 2000
+training_data = []
+
+def create_training_data():
+    for category in CATEGORIES:  # do dogs and cats
+
+        path = os.path.join(DATADIR,category)  # create path to dogs and cats
+        class_num = CATEGORIES.index(category)  # get the classification  (0 or a 1). 0=dog 1=cat
+        index = 0
+
+        for img in tqdm(os.listdir(path)):  # iterate over each image per dogs and cats
+            index+=1
+            try:
+                img_array = cv2.imread(os.path.join(path,img) ,cv2.IMREAD_GRAYSCALE)  # convert to array
+                new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # resize to normalize data size
+                training_data.append([new_array, class_num])  # add this to our training_data
+            except Exception as e:  # in the interest in keeping the output clean...
+                pass
+            if index>=input_size: break
+
+create_training_data()
+
+# print(len(training_data))
+
+import random
+
+random.shuffle(training_data)
+
+# for sample in training_data[:10]:
+#     print(sample[1])
+
+X = []
+y = []
+
+for features,label in training_data:
+    X.append(features)
+    y.append(label)
+
+# print(X[0].reshape(-1, IMG_SIZE, IMG_SIZE, 1))
+
+X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+
 import tensorflow as tf
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
 
-mnist = tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test) = mnist.load_data()
-# print(x_train[0])
+X = X/255.0
 
-X = tf.placeholder(tf.float32,[None,784])
-Y = tf.placeholder(tf.float32,[None,784])
+model = Sequential()
 
-hidden_l1 = 500
-hidden_l2 = 500
-hidden_l3 = 500
+model.add(Conv2D(256, (3, 3), input_shape=X.shape[1:]))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-out_class = 10
-batch_size = 100
-epoch = 50
+model.add(Conv2D(256, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-def neural_net(data):
+model.add(Flatten())  # this converts our 3D feature maps to 1D feature vectors
 
-    Layer_hid1 = {'weight': tf.Variable(tf.random_normal(tf.float32,[784,hidden_l1])),
-                  'biase': tf.random_normal(tf.Variable(tf.float32,hidden_l1))}
-    # Bias_hid1 = {'bias':tf.Variable(tf.float32,hidden_l1)}
-    Layer_hid2 = {'weight': tf.Variable(tf.random_normal(tf.float32, [hidden_l1,hidden_l2])),
-                  'biase': tf.random_normal(tf.Variable(tf.float32, hidden_l2))}
-    Layer_hid3 = {'weight': tf.Variable(tf.random_normal(tf.float32, [hidden_l2, hidden_l3])),
-                  'biase': tf.random_normal(tf.Variable(tf.float32, hidden_l3))}
-    Layer_out = {'weight': tf.Variable(tf.random_normal(tf.float32, [hidden_l3,out_class])),
-                  'biase': tf.random_normal(tf.Variable(tf.float32, out_class))}
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dense(1))
+model.add(Activation('sigmoid'))
 
-    l1_out = tf.add(tf.matmul(data,Layer_hid1['weight']),Layer_hid1['biase'])
-    l1_out = tf.nn.relu(l1_out)
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
 
-    l2_out = tf.add(tf.matmul(l1_out,Layer_hid2['weight']),Layer_hid2['biase'])
-    l2_out = tf.nn.relu(l2_out)
-
-    l3_out = tf.add(tf.matmul(l2_out, Layer_hid3['weight']), Layer_hid3['biase'])
-    l3_out = tf.nn.relu(l3_out)
-
-    out = tf.add(tf.matmul(l3_out, Layer_out['weight']), Layer_out['biase'])
-
-    return (out)
-
-def train_nn(x):
-    prediction = neural_net(x)
-    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(prediction,Y))
-    optimizer = tf.train.AdamOptimizer().minimize(cost)
-
-    with tf.Session() as sess:
-        init = tf.global_variables_initializer()
-        sess.run(init)
-        epoch_loss = 0
-        for index in range(epoch):
-            # for mnist.tr
-            _, c = sess.run([optimizer,cost],feed_dict={X:tf.convert_to_tensor(x_train,tf.float32),Y:tf.convert_to_tensor(y_train,tf.float32)})
-            epoch_loss+=c
-            print(index,'completed out of:',epoch,'with loss:',epoch_loss)
-
-        correctnes = tf.equal(tf.arg_max(prediction,1),tf.arg_max(Y,1))
-        accuracy = tf.reduce_mean(tf.cast(correctnes,tf.float32))
-        # print('Accuracy',accuracy.eval({X:mnist.test.images,Y:mnist.test.labels}))
-
-train_nn(X)
-
-
+model.fit(X, y, batch_size=32, epochs=4, validation_split=0.3)
