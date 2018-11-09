@@ -6,7 +6,8 @@ from tqdm import tqdm
 
 DATADIR = "./Data/"
 
-CATEGORIES = ["Dog", "Cat"]
+# CATEGORIES = ["Dog", "Cat"]
+CATEGORIES = ["test"]
 
 IMG_SIZE = 50
 input_size = 2000
@@ -30,11 +31,15 @@ def create_training_data():
             if index>=input_size: break
 
 create_training_data()
+print(training_data)
+plt.imshow(training_data[0][0]) #Stage ONE - lets do it step by step
+plt.show()
 
 # print(len(training_data))
 
-import random
 
+
+import random
 random.shuffle(training_data)
 
 # for sample in training_data[:10]:
@@ -49,36 +54,39 @@ for features,label in training_data:
 
 # print(X[0].reshape(-1, IMG_SIZE, IMG_SIZE, 1))
 
-X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+X = np.array(X).reshape(-1, IMG_SIZE, IMG_SIZE, 1)# !!!!!!!!!!!!!!!!!!!!!################%CHECK this reshape with mine reshape !!!!!!!!!!!!@@@@@@@@@@@@%%%%%%%%%%%%%@@@@@@@@@@!!!!!!!
 
-import tensorflow as tf
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
-from tensorflow.keras.layers import Conv2D, MaxPooling2D
 
-X = X/255.0
 
-model = Sequential()
 
-model.add(Conv2D(256, (3, 3), input_shape=X.shape[1:]))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Conv2D(256, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Flatten())  # this converts our 3D feature maps to 1D feature vectors
-
-model.add(Dense(64))
-model.add(Activation('relu'))
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
-
-model.compile(loss='binary_crossentropy',
-              optimizer='adam',
-              metrics=['accuracy'])
-
-model.fit(X, y, batch_size=32, epochs=4, validation_split=0.3)
+# # import tensorflow as tf
+# # from tensorflow.keras.datasets import cifar10
+# # from tensorflow.keras.preprocessing.image import ImageDataGenerator
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
+# from tensorflow.keras.layers import Conv2D, MaxPooling2D
+#
+# X = X/255.0
+#
+# model = Sequential()
+#
+# model.add(Conv2D(256, (3, 3), input_shape=X.shape[1:]))
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+# model.add(Conv2D(256, (3, 3)))
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+#
+# model.add(Flatten())  # this converts our 3D feature maps to 1D feature vectors
+#
+# model.add(Dense(64))
+# model.add(Activation('relu'))
+# model.add(Dense(1))
+# model.add(Activation('sigmoid'))
+#
+# model.compile(loss='binary_crossentropy',
+#               optimizer='adam',
+#               metrics=['accuracy'])
+#
+# model.fit(X, y, batch_size=32, epochs=4, validation_split=0.3)
