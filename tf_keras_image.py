@@ -4,15 +4,16 @@ import random
 import numpy as np
 import keras
 import tensorflow as tf
+from tensorflow.contrib import keras
 
-tf.keras.models.Sequential
-# import matplotlib.pyplot as plt
-import tensorflow as ts
-np.set_printoptions(linewidth=102)
+
+
 import timer
+
+np.set_printoptions(linewidth=102)
 path = '../Data/'
 catalogs = ['Dog','Cat']
-# catalogs = ['test']
+
 images = []
 input_size = 5000
 resolution = 50
@@ -28,18 +29,12 @@ for x in catalogs:
             image = cv2.imread(os.path.join(curr_catal, file))#,cv2.IMREAD_GRAYSCALE)
             grey = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
             image_resize = cv2.resize(grey, (resolution, resolution))
-            # print(image_resize.shape)
-            # print(image_resize)
-            #image_normal = tf.keras.utils.normalize(image_resize,axis=1) #axis 0 - 0.69
-            # print(image_normal.shape)
-            # print(image_normal)
             images.append([image_resize, class_num])
         except Exception as e:
             pass
 
         if index >= input_size: break
 
-random.seed(3)
 random.shuffle(images)
 
 X_train = []
