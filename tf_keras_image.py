@@ -5,13 +5,10 @@ import numpy as np
 import keras
 import tensorflow as tf
 from tensorflow.contrib import keras
-
-
-
 import timer
 
 np.set_printoptions(linewidth=102)
-path = '../Data/'
+path = 'C:/Dataset/img'
 catalogs = ['Dog','Cat']
 
 images = []
@@ -49,25 +46,39 @@ X_train = X_train.reshape(len(images),resolution,resolution,1)
 
 X_train = X_train/255.0 #### Normalization
 
-model = keras.models.Sequential()
+import time
+from tensorflow.contrib.keras import callbacks
+import pickle
 
-model.add(keras.layers.Conv2D(256,(3,3),input_shape=(resolution,resolution,1)))
-model.add(keras.layers.Activation('relu'))
-model.add(keras.layers.MaxPool2D(pool_size=(2,2)))
 
-model.add(keras.layers.Conv2D(256,(3,3)))
-model.add(keras.layers.Activation('relu'))
-model.add(keras.layers.MaxPool2D(pool_size=(2,2)))
+pickle_dump = open('c:/Dataset/dogcat/X_train_y_train.pkl','wb')
+pickle.dump([X_train,y_train],pickle_dump)
+pickle_dump.close()
 
-model.add(keras.layers.Flatten())
-model.add(keras.layers.Dense(64))
-model.add(keras.layers.Activation('relu'))
 
-model.add(keras.layers.Dense(1))
-model.add(keras.layers.Activation('sigmoid'))
+
+# NAME = f'cnn256x256-{int(time.time())}'
+# tensorboard = callbacks.TensorBoard(log_dir=f'C:/Board/{NAME}')
 #
-model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(X_train,y_train,epochs=5,batch_size=50,verbose=1)
+# model = keras.models.Sequential()
+#
+# model.add(keras.layers.Conv2D(256,(3,3),input_shape=(resolution,resolution,1)))
+# model.add(keras.layers.Activation('relu'))
+# model.add(keras.layers.MaxPool2D(pool_size=(2,2)))
+#
+# model.add(keras.layers.Conv2D(256,(3,3)))
+# model.add(keras.layers.Activation('relu'))
+# model.add(keras.layers.MaxPool2D(pool_size=(2,2)))
+#
+# model.add(keras.layers.Flatten())
+# model.add(keras.layers.Dense(64))
+# model.add(keras.layers.Activation('relu'))
+#
+# model.add(keras.layers.Dense(1))
+# model.add(keras.layers.Activation('sigmoid'))
+# #
+# model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
+# model.fit(X_train,y_train,epochs=5, validation_split=0.3 ,batch_size=50,verbose=1,callbacks=[tensorboard])
 
 # Other ways of normalization ??? line 73
 # Why sigmoid and why 1 output instead of 2 [0,1] cat and dog (becuse binary crossentropy??)

@@ -21,7 +21,7 @@ with tf.Session() as sess:
     print('Nowa Suma: ',sess.run(nowa_suma))
     # print()
 
-    write = tf.summary.FileWriter('./Board',sess.graph)
+    write = tf.summary.FileWriter('c:\Board',sess.graph)
 write.close()
 
 # C:\PythonProj\TensorFlow
