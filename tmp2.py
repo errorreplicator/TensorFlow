@@ -1,5 +1,6 @@
-# (92221, 9)
-# (4610, 9)
-# (87611, 9)
+import os
 
-print(4610+87611)
+path = 'c:/Dataset/cifar10/train/'
+
+for x in os.listdir(path):
+    print(x)
