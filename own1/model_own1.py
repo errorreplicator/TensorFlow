@@ -24,29 +24,29 @@ import pickle
 pikcling = open('C:/Dataset/pickles/daisy_rose.pkl','wb')
 pickle.dump([X_train,y_train,X_test,y_test],file=pikcling)
 
-model = tf.keras.models.Sequential()
-
-model.add(tf.keras.layers.Conv2D(256,kernel_size=(3,3),activation='relu',input_shape=(shape,shape,1)))
-model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
-
-model.add(tf.keras.layers.Conv2D(256,kernel_size=(3,3),activation='relu'))
-model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
-
-model.add(tf.keras.layers.Conv2D(64,(3,3),activation='relu'))
-model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
-
-model.add(tf.keras.layers.Flatten())
-model.add(tf.keras.layers.Dense(64))
-model.add(tf.keras.layers.Activation('relu'))
-
-model.add(tf.keras.layers.Dense(1,activation='sigmoid'))
-
-optimize = oop.Adam(lr=0.001)
-
-model.compile(optimizer=optimize, loss='binary_crossentropy',metrics=['accuracy'])
-model.fit(X_train,y_train,validation_data=(X_test,y_test), epochs=5,batch_size=10,verbose=1)
-
-
+# model = tf.keras.models.Sequential()
+#
+# model.add(tf.keras.layers.Conv2D(256,kernel_size=(3,3),activation='relu',input_shape=(shape,shape,1)))
+# model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
+#
+# model.add(tf.keras.layers.Conv2D(256,kernel_size=(3,3),activation='relu'))
+# model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
+#
+# model.add(tf.keras.layers.Conv2D(64,(3,3),activation='relu'))
+# model.add(tf.keras.layers.MaxPool2D(pool_size=(2,2)))
+#
+# model.add(tf.keras.layers.Flatten())
+# model.add(tf.keras.layers.Dense(64))
+# model.add(tf.keras.layers.Activation('relu'))
+#
+# model.add(tf.keras.layers.Dense(1,activation='sigmoid'))
+#
+# optimize = oop.Adam(lr=0.001)
+#
+# model.compile(optimizer=optimize, loss='binary_crossentropy',metrics=['accuracy'])
+# model.fit(X_train,y_train,validation_data=(X_test,y_test), epochs=5,batch_size=10,verbose=1)
+#
+# model.pre
 # loss: 0.5509 - acc: 0.7150 - val_loss: 7.7375 - val_acc: 0.5188
 
 # why pool_size (3,3) cause dimension error

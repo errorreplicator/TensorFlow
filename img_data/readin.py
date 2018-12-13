@@ -3,15 +3,11 @@ import os
 import cv2
 import random
 
-
-np.set_printoptions(linewidth=1400)
-
-path_train = 'C:/Dataset/flowers/train/'
 def read_data(path,reso=60,flag='all',fol_list=[]):
     resolution = reso
     FOLDERS = []
     img_list = []
-    index = 0
+    # index=0
     if not fol_list: #if list is enpty
         for folder in os.listdir(path):
             FOLDERS.append(folder)
@@ -25,9 +21,9 @@ def read_data(path,reso=60,flag='all',fol_list=[]):
             img = cv2.imread(img)
             img_grey = cv2.cvtColor(cv2.resize(img,(reso,reso)),cv2.COLOR_RGB2GRAY)
             img_list.append([img_grey,index])
-            index +=1
-            if index == 5:
-                break
+            # index+=1
+            # if index>5:
+            #     break
 
     random.shuffle(img_list)
     X_ = []
@@ -39,10 +35,3 @@ def read_data(path,reso=60,flag='all',fol_list=[]):
     X_ = np.array(X_)
     y_ = np.array(y_)
     return (X_,y_)
-
-# read_data(path=path_train)
-# img_list = np.array(img_list)
-# display.plots(img_list[0])
-
-
-
