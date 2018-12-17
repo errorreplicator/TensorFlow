@@ -13,6 +13,9 @@ def read_data(path,reso=60,flag='all',fol_list=[]):
             FOLDERS.append(folder)
     else:
         FOLDERS = fol_list
+
+    for index,folder in enumerate(FOLDERS):
+        print(f'{index}: {folder}')
     for f in FOLDERS:
         index = FOLDERS.index(f)
         curr_folder = os.path.join(path,f)
@@ -35,3 +38,23 @@ def read_data(path,reso=60,flag='all',fol_list=[]):
     X_ = np.array(X_)
     y_ = np.array(y_)
     return (X_,y_)
+
+def get_all_incorrect(y_train,predict_class,predictions):
+    classes = predict_class.reshape((-1,))
+    diff_index = np.nonzero(classes != y_train)
+    konvert = np.asarray(diff_index)
+    diff_index = konvert[0][:]
+    propabilities = []
+    for x in diff_index:
+        propabilities.append(predictions[x][0])
+    return (diff_index, propabilities)
+
+def get_all_correct(y_train,predict_class,predictions):
+    classes = predict_class.reshape((-1,))
+    diff_index = np.nonzero(classes == y_train)
+    konvert = np.asarray(diff_index)
+    diff_index = konvert[0][:]
+    propabilities = []
+    for x in diff_index:
+        propabilities.append(predictions[x][0])
+    return (diff_index, propabilities)
