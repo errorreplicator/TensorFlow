@@ -11,6 +11,7 @@ images = []
 input_size = 1000
 resolution = 100
 
+
 for x in catalogs:
     curr_catal = os.path.join(path,x)
     index = 0
